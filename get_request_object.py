@@ -24,6 +24,7 @@ request = ai.text_request()
 def create_user() :
 
  request.session_id = re.sub('[^A-Za-z0-9]+', '', str(uuid.uuid1()))
+ print 's'
  return request.session_id
 
 
