@@ -1,0 +1,281 @@
+{
+	"intent" : {
+		"Default Fallback Intent" : {
+			"defaultMessage" : ["Can you repeat that again?"],
+			"contexts" : {
+				"Welcome" : {
+					"sysResponse" : ["Can you please state your problem more clearly."]
+				},
+				"Default message" : {
+					"sysResponse" : ["Can you please state your problem more clearly."]
+				},
+				"problem_identified" : {
+					"sysResponse" : ["Please state the exact error message.", "Please tell me what error message do you see on the screen."]
+				},
+				"query_completed_SSPR" : {
+					"sysResponse" : ["Sorry I did not get you. Has it solved your problem?", "Please tell me if it helped solve your problem"]
+				},
+				"query_completed_AD" : {
+					"sysResponse" : ["Sorry I did not get you. Has it solved your problem?", "Please tell me if it helped solve your problem"]
+				}
+			}
+		},
+		
+		"Default Welcome Intent" : {
+			"contextIn" : ["Default message"],
+			"contextOut" : ["Welcome"],
+			"sysResponse" : ["Hello. How may I help you?"],
+			"customResponse" : "N",
+			"jump" : {"status" :"N"},
+			"flagIn" : 0,
+			"flagOut" : 1,
+			"height" : 1,
+			"lifespan" : 2
+		},
+		"Default start message" : {
+			"contextIn" : [],
+			"contextOut" : ["Default message"],
+			"sysResponse" : "Welcome to the <school> IT Help Desk. How may I help you?",
+			"customResponse" : "Y",
+			"jump" : {"status" :"N"},
+			"flagIn" : 1,
+			"flagOut" : 1,
+			"height" : 0,
+			"lifespan" : 2
+		},
+		"YES - password_reset_problem" : {
+			"slotFilling" : {"account_type" : {"sysResponse" : "Can you please tell me which account you are not able to log into"}},
+			"contextIn" : ["Default message"],
+			"contextOut" : ["problem_identified"],
+			"sysResponse" : ["Can you tell me what error message are you getting?"],
+			"customResponse" : "N",
+			"jump" : {"status" :"N"},
+			"flagIn" : 1,
+			"flagOut" : 1,
+			"height" : 2,
+			"lifespan" : 2
+		},
+		"NO - not_password_reset_problem" : {
+			"contextIn" : ["Default message"],
+			"contextOut" : ["END_CHAT"],
+			"sysResponse" : ["No problem. I am connecting you to our agent shortly."],
+			"customResponse" : "N",
+			"jump" : {"status" :"N"},
+			"flagIn" : 1,
+			"flagOut" : -1,
+			"height" : 2,
+			"lifespan" : 2
+		},
+		"error_message_1_pass_invalid" : {
+			"contextIn" : ["problem_identified"],
+			"contextOut" : ["get_verification_credentials_SSPR"],
+			"sysResponse" : ["Thank you for the information. I will be glad to assist you. To proceed further I need to validate few details."],
+			"customResponse" : "N",
+			"jump" : {"status" :"N"},
+			"flagIn" : 1,
+			"flagOut" : -1,
+			"height" : 3,
+			"lifespan" : 2
+		},
+		"error_message_2_acc_locked" : {
+			"contextIn" : ["problem_identified"],
+			"contextOut" : ["problem_phase_2_start"],
+			"sysResponse" : ["Not a problem. I will go ahead and reset the password for your account. Before I do that I would need to verify few more details."],
+			"customResponse" : "N",
+			"jump" : {"status" :"N"},
+			"flagIn" : 1,
+			"flagOut" : -2,
+			"height" : 3,
+			"lifespan" : 2
+		},
+		"verification_query" : {
+			"contextIn" : ["get_verification_credentials_SSPR"],
+			"flagIn" : -1,
+			"intent" : {
+				"query_field1_name_SSPR" : {
+					"name" : "first and last name",
+					"fallbackMessage" : [""]
+				},
+				"query_field2_studentId_SSPR" : {
+					"name" : "student id",
+					"fallbackMessage" : [""]
+				},
+				"query_field3_emailId_SSPR" : {
+					"name" : "email id",
+					"fallbackMessage" : [""]
+				}
+			},
+			"contextOut" : ["query_completed_SSPR"],
+			"sysResponseTemplates" : ["May I have your <field>?", "Please enter your <field>","Enter your <field>"],
+			"sysResponsePositive" : ["Thank you for verifying your account. I am providing you a link where you can follow through the guidelines.\n<link>"],
+			"sysResponseNegative" : ["I am afraid I cannot verify your account. Have a good day!"],
+			"sysResponseRepeat" : ["I am afraid I cannot verify your account. Please provide your credentials once again."],
+			"flagOut" : 1,
+			"height" : 4,
+			"lifespan" : 2
+
+		},
+
+		"NO - problem_not_solved_SSPR" : {
+			"contextIn" : ["query_completed_SSPR"],
+			"contextOut" : ["problem_phase_2_START"],
+			"sysResponse" : ["Not a problem. I will go ahead and reset the password for your account. Before I do that I would need to verify few more details."],
+			"customResponse" : "N",
+			"jump" : {"status" :"N"},
+			"flagIn" : 1,
+			"flagOut" : -2,
+			"height" : 5,
+			"lifespan" : 2
+		},
+		"YES - problem_solved_SSPR" : {
+			"contextIn" : ["query_completed_SSPR"],
+			"contextOut" : ["END_CHAT"],
+			"sysResponse" : ["Since you are logged in, please change the password to ensure that your login is secure. Thank you for contacting the Help Desk. Have a great day!"],
+			"customResponse" : "N",
+			"jump" : {"status" :"N"},
+			"flagIn" : 1,
+			"flagOut" : -1,
+			"height" : 5,
+			"lifespan" : 2
+		},
+		"authentication_query" : {
+			"contextIn" : ["problem_phase_2_START"],
+			"flagIn" : -2,
+			"intent" : {
+				"query_field1_ID_AD" : {
+					"name" : "ID number",
+					"fallbackMessage" : [""]
+				},
+				"query_field2_DOB_AD" : {
+					"name" : "date of birth",
+					"fallbackMessage" : [""]
+				},
+				"query_field3_address_AD" : {
+					"name" : "complete address",
+					"fallbackMessage" : [""]
+				},
+				"query_field4_fullName_AD" : {
+					"name" : "full name",
+					"fallbackMessage" : [""]
+				},
+				"query_field5_SSN_AD" : {
+					"name" : "SSN number",
+					"fallbackMessage" : [""]
+				},
+				"query_field6_phone_AD" : {
+					"name" : "phone number",
+					"fallbackMessage" : [""]
+				},
+				"query_field7_semester_AD" : {
+					"name" : "semester number",
+					"fallbackMessage" : [""]
+				},
+				"query_field8_securityAnswer_AD" : {
+					"name" : "security answer",
+					"fallbackMessage" : [""]
+				}
+			},
+			"contextOut" : ["query_completed_AD"],
+			"sysResponseTemplates" : ["May I have your <field>?", "Please enter your <field>","Enter your <field>"],
+			"sysResponsePositive" : ["Thank you, for verifying the account. Please allow me a couple of minutes while I reset the password for you. Thank you for your patience. I have reset your Portal password and your new temporary password is <newPassword>. Please try to login using this new password and let me know if it works. Do keep in mind that it is case sensitive."],
+			"sysResponseNegative" : ["I am afraid I cannot authenticate your account. Have a good day!"],
+			"sysResponseRepeat" : ["I am afraid I cannot authenticate your account. Please provide your credentials once again."],
+			"flagOut" : 1,
+			"height" : 6,
+			"lifespan" : 2
+		},
+		"NO - problem_not_solved_AD" : {
+			"contextIn" : ["query_completed_AD"],
+			"contextOut" : ["END_CHAT"],
+			"sysResponse" : ["No problem. I am connecting you to our agent on call."],
+			"customResponse" : "N",
+			"jump" : {"status" :"N"},
+			"flagIn" : 1,
+			"flagOut" : -1,
+			"height" : 16,
+			"lifespan" : 2
+		},
+		"YES - problem_solved_AD" : {
+			"contextIn" : ["query_completed_AD"],
+			"contextOut" : ["END_CHAT"],
+			"sysResponse" : ["Since you are logged in, please change the password to ensure that your login is secure. Thank you for contacting the Help Desk. Have a great day!"],
+			"customResponse" : "N",
+			"jump" : {"status" :"N"},
+			"flagIn" : 1,
+			"flagOut" : -1,
+			"height" : 16,
+			"lifespan" : 2
+		}
+	},
+	"verification_fields" : [
+		{	"intentId" : "query_field1_name_SSPR",
+			"status" : "Y"
+		},
+		{	"intentId" : "query_field2_studentId_SSPR",
+			"status" : "N"
+		},
+		{	"intentId" : "query_field3_emailId_SSPR",
+			"status" : "Y"
+		}
+
+	],
+	"authentication_fields" : [
+		{	"intentId" : "query_field1_ID_AD",
+			"status" : "N"
+		},
+		{	"intentId" : "query_field2_DOB_AD",
+			"status" : "Y"
+		},
+		{	"intentId" : "query_field3_address_AD",
+			"status" : "N"
+		},
+		{	"intentId" : "query_field4_fullName_AD",
+			"status" : "Y"
+		},
+		{	"intentId" : "query_field5_SSN_AD",
+			"status" : "N"
+		},
+		{	"intentId" : "query_field6_phone_AD",
+			"status" : "Y"
+		},
+		{	"intentId" : "query_field7_semester_AD",
+			"status" : "N"
+		},
+		{	"intentId" : "query_field8_securityAnswer_AD",
+			"status" : "Y"
+		}
+	],
+	"account_type" : {
+		"TypeA" : {
+			"synonyms" : {
+				"blackboard" : {
+					"variations" : ["blackboard", "black-board", "black board", "blacboard", "blackbord"]
+				},
+				"myOttawa" : {
+					"variations" : ["myottawa", "my ottawa", "myotawa", "ottawa", "otava", "my otava"]
+				}
+			}
+		},
+		"TypeB" : {
+			"synonyms" : {
+				"synonymB1" : {
+					"variations" : []
+				}
+			}
+		},
+		"TypeC" : {
+			"synonyms" : {
+				"synonymC1" : {
+					"variations" : []
+				}
+			}
+		},
+		"TypeD" : {
+			"synonyms" : {
+				"synonymD1" : {
+					"variations" : []
+				}
+			}
+		}
+	}
+}
